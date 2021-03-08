@@ -11,8 +11,6 @@ services:
       - $PWD/my-httpd.conf:/usr/local/apache2/conf/httpd.conf
       - $PWD/server.key:/usr/local/apache2/conf/server.key
       - $PWD/server.crt:/usr/local/apache2/conf/server.crt
-      
-      
     # networks:
     #   - traefik
 
