@@ -1,0 +1,63 @@
+#zf210308.1541
+
+version: "3"
+
+services:
+
+  webserver:
+    image: httpd
+    volumes:
+      - /Users/zuzu/dev-vpsi/WA-INN:/usr/local/apache2/htdocs/
+      - $PWD/my-httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - $PWD/server.key:/usr/local/apache2/conf/server.key
+      - $PWD/server.crt:/usr/local/apache2/conf/server.crt
+      
+      
+    # networks:
+    #   - traefik
+
+    ports:
+      - "443:443"
+    tty: true
+
+    labels:
+      - traefik.http.routers.webserver.rule=Host("localhost")
+      - traefik.http.routers.webserver.tls=true
+      - traefik.http.services.webserver.loadbalancer.server.port=80
+
+
+
+
+
+
+#   proxy:
+#     image: traefik:v2.2
+#     command: --api.insecure=true --providers.docker # --configFile=/traefik.yml 
+#     ports:
+#       - "8081:80"     # The HTTP port
+#       - "443:443"
+#       #- "9090:9090" # The TCP/TLS Entry Point
+#       - "8080:8080" # The Web UI (enabled by --api) moved to traefik.DEV_DOMAIN
+#     # networks:
+#     #   - traefik
+#     volumes:
+#       - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events
+#       - ./traefik.yml:/traefik.yml
+#       - ./certs:/certs
+#       - ./config:/config
+#     # labels:
+#       # - traefik.http.routers.traefik.rule=Host("traefik.${DEV_DOMAIN}")
+#       # - traefik.http.routers.traefik.service=api@internal
+#       # - traefik.http.routers.traefik.tls=true
+#       # - traefik.http.routers.metrics.rule=Host("traefik.${DEV_DOMAIN}") && PathPrefix("/metrics")
+#       # - traefik.http.routers.metrics.service=prometheus@internal
+#       # - traefik.http.routers.metrics.tls=true
+#     container_name: traefik
+# 
+# # An external network so the same traefik can be use for different project (all sharing ports 80,443)
+# # This has to be created by hand otherwise the name is not correct
+# # networks:
+# #   traefik:
+# #     external: true
+# 
+# 
